@@ -1,25 +1,44 @@
 import React from 'react';
-import logo from './logo.svg';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
+
+import Header from './components/Header';
+import Home from './pages/Home';
+import Episodes from './pages/Episodes';
+import Characters from './pages/Characters/Characters';
+import Character from './pages/Characters/Character';
+
 import './App.css';
 
-function App() {
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+
+const client = new ApolloClient({
+  uri: process.env.REACT_APP_API_URL,
+  cache: new InMemoryCache()
+});
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ApolloProvider client={client}>
+      <div className="App">
+      <Router>
+        <Header/>
+        <Switch>
+          <Route path="/episodes" component={Episodes}>
+          </Route>
+          <Route path="/characters" component={Characters}>
+          </Route>
+          <Route path="/character/:id" component={Character}>
+          </Route>
+          <Route path="/" component={Home}>
+          </Route>
+        </Switch>
+      </Router>
+      </div>
+    </ApolloProvider>
   );
 }
 
